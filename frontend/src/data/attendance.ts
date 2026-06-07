@@ -1,0 +1,173 @@
+import type {
+  AttendanceOverview,
+  Reservation,
+  AttendanceRecord,
+  Seat,
+  User,
+} from "../types";
+
+const now = new Date();
+const todayStr = now.toISOString().split("T")[0];
+const hours = now.getHours();
+const nextHour = hours + 1;
+const hourAfter = hours + 2;
+
+export const localSeats: Seat[] = [
+  { id: 1, seatCode: "A01", floor: 1, zone: "静音区", status: "available" },
+  { id: 2, seatCode: "A02", floor: 1, zone: "静音区", status: "reserved" },
+  { id: 3, seatCode: "B01", floor: 1, zone: "讨论区", status: "occupied" },
+  { id: 4, seatCode: "B02", floor: 1, zone: "讨论区", status: "available" },
+  { id: 5, seatCode: "C01", floor: 2, zone: "窗景区", status: "unavailable" },
+  { id: 6, seatCode: "C02", floor: 2, zone: "窗景区", status: "available" },
+];
+
+export const localUsers: User[] = [
+  { id: 1, username: "张三", phone: "13800138001", noShowCount: 0, isRestricted: false },
+  { id: 2, username: "李四", phone: "13800138002", noShowCount: 2, isRestricted: false },
+  { id: 3, username: "王五", phone: "13800138003", noShowCount: 4, isRestricted: true },
+];
+
+export const localReservations: Reservation[] = [
+  {
+    id: 1,
+    userId: 1,
+    seatId: 2,
+    seatCode: "A02",
+    reservationDate: todayStr,
+    startTime: `${String(nextHour).padStart(2, "0")}:00:00`,
+    endTime: `${String(hourAfter).padStart(2, "0")}:00:00`,
+    status: "reserved",
+    checkInTime: null,
+    checkOutTime: null,
+    durationMinutes: 0,
+    username: "张三",
+    zone: "静音区",
+  },
+  {
+    id: 2,
+    userId: 1,
+    seatId: 3,
+    seatCode: "B01",
+    reservationDate: todayStr,
+    startTime: `${String(hours).padStart(2, "0")}:00:00`,
+    endTime: `${String(nextHour).padStart(2, "0")}:00:00`,
+    status: "checked_in",
+    checkInTime: new Date(now.getTime() - 20 * 60000).toISOString(),
+    checkOutTime: null,
+    durationMinutes: 0,
+    username: "张三",
+    zone: "讨论区",
+  },
+  {
+    id: 3,
+    userId: 2,
+    seatId: 1,
+    seatCode: "A01",
+    reservationDate: todayStr,
+    startTime: `${String(hours - 2).padStart(2, "0")}:00:00`,
+    endTime: `${String(hours - 1).padStart(2, "0")}:00:00`,
+    status: "checked_out",
+    checkInTime: new Date(now.getTime() - 180 * 60000).toISOString(),
+    checkOutTime: new Date(now.getTime() - 120 * 60000).toISOString(),
+    durationMinutes: 60,
+    username: "李四",
+    zone: "静音区",
+  },
+  {
+    id: 4,
+    userId: 2,
+    seatId: 4,
+    seatCode: "B02",
+    reservationDate: todayStr,
+    startTime: `${String(hours - 3).padStart(2, "0")}:00:00`,
+    endTime: `${String(hours - 2).padStart(2, "0")}:00:00`,
+    status: "no_show",
+    checkInTime: null,
+    checkOutTime: null,
+    durationMinutes: 0,
+    username: "李四",
+    zone: "讨论区",
+  },
+];
+
+export const localAttendanceRecords: AttendanceRecord[] = [
+  {
+    id: 1,
+    reservationId: 2,
+    userId: 1,
+    seatId: 3,
+    seatCode: "B01",
+    username: "张三",
+    zone: "讨论区",
+    checkInTime: new Date(now.getTime() - 20 * 60000).toISOString(),
+    checkOutTime: null,
+    durationMinutes: 0,
+    status: "checked_in",
+    reservationDate: todayStr,
+    startTime: `${String(hours).padStart(2, "0")}:00:00`,
+    endTime: `${String(nextHour).padStart(2, "0")}:00:00`,
+  },
+  {
+    id: 2,
+    reservationId: 3,
+    userId: 2,
+    seatId: 1,
+    seatCode: "A01",
+    username: "李四",
+    zone: "静音区",
+    checkInTime: new Date(now.getTime() - 180 * 60000).toISOString(),
+    checkOutTime: new Date(now.getTime() - 120 * 60000).toISOString(),
+    durationMinutes: 60,
+    status: "checked_out",
+    reservationDate: todayStr,
+    startTime: `${String(hours - 2).padStart(2, "0")}:00:00`,
+    endTime: `${String(hours - 1).padStart(2, "0")}:00:00`,
+  },
+  {
+    id: 3,
+    reservationId: 4,
+    userId: 2,
+    seatId: 4,
+    seatCode: "B02",
+    username: "李四",
+    zone: "讨论区",
+    checkInTime: null,
+    checkOutTime: null,
+    durationMinutes: 0,
+    status: "no_show",
+    reservationDate: todayStr,
+    startTime: `${String(hours - 3).padStart(2, "0")}:00:00`,
+    endTime: `${String(hours - 2).padStart(2, "0")}:00:00`,
+  },
+  {
+    id: 4,
+    reservationId: 1,
+    userId: 1,
+    seatId: 2,
+    seatCode: "A02",
+    username: "张三",
+    zone: "静音区",
+    checkInTime: null,
+    checkOutTime: null,
+    durationMinutes: 0,
+    status: "pending",
+    reservationDate: todayStr,
+    startTime: `${String(nextHour).padStart(2, "0")}:00:00`,
+    endTime: `${String(hourAfter).padStart(2, "0")}:00:00`,
+  },
+];
+
+export function createFallbackAttendance(): AttendanceOverview {
+  return {
+    todayReservations: 4,
+    todayCheckedIn: 1,
+    todayCheckedOut: 1,
+    todayNoShow: 1,
+    totalStudyMinutes: 60,
+    pendingReservations: localReservations.filter((r) => r.status === "reserved"),
+    activeSessions: localAttendanceRecords.filter((r) => r.status === "checked_in"),
+    recentRecords: localAttendanceRecords.slice(0, 10),
+    users: localUsers,
+    seats: localSeats,
+  };
+}
